@@ -8,14 +8,18 @@
         "email": "catchen@catchen.me",
         "web": "http://catchen.me"
     },
+    "main": "./index.js",
     "dependencies": {
-        "hiredis": "0.1.12",
-        "redis": "0.6.0"
+        "redis": ">=0.6.0"
+    },
+    "devDependencies": {
+        "hiredis": ">=0.1.12"
     },
     "repositories": [
         {
             "type": "git",
             "url": "git@github.com:CatChen/redis-user-and-role.git"
         }
-    ]
+    ],
+    "engines": { "node": ">= 0.4.7" }
 }
