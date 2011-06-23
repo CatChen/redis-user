@@ -1,4 +1,12 @@
 module.exports = function(redisClient) {
+    var addUsersToRole = function(userEmails, roleName) {
+        
+    };
+    
+    var addUserToRole = function(userEmail, roleName) {
+        
+    };
+    
     return {
         createRole: function(name) {},
         getRole: function(name) {},
