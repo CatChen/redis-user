@@ -1,0 +1,21 @@
+{
+    "name": "redis-user-and-role",
+    "description": "A simple user and role system for Node.js and Redis.",
+    "homepage": "https://github.com/CatChen/redis-user-and-role",
+    "version": "0.1.0",
+    "author": {
+        "name": "Cat Chen",
+        "email": "catchen@catchen.me",
+        "web": "http://catchen.me"
+    },
+    "dependencies": {
+        "hiredis": "0.1.12",
+        "redis": "0.6.0"
+    },
+    "repositories": [
+        {
+            "type": "git",
+            "url": "git@github.com:CatChen/redis-user-and-role.git"
+        }
+    ]
+}
