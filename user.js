@@ -6,7 +6,7 @@ module.exports = function(redis) {
     var computeSHA1 = function(str) { return crypto.createHash(passwordHashAlgorithm).update(str).digest('hex'); };
     var emptyFunction = function() {};
     
-    var User = {
+    var user = {
         createUser: function(email, password, callback) {
             callback = callback || emptyFunction;
             if (!emailRegExp.test(email)) {
@@ -69,12 +69,12 @@ module.exports = function(redis) {
         },
         updateUserPassword: function(email, oldPassword, newPassword, callback) {
             callback = callback || emptyFunction;
-            User.validateUser(email, oldPassword, function(isValid) {
+            user.validateUser(email, oldPassword, function(isValid) {
                 if (!isValid) {
                     callback(false);
                     return;
                 }
-                User.getUser(email, function(user) {
+                user.getUser(email, function(user) {
                     if (user == null) {
                         callback(false);
                         return;
@@ -91,7 +91,7 @@ module.exports = function(redis) {
         },
         deleteUser: function(email, callback) {
             callback = callback || emptyFunction;
-            User.getUser(email, function(user) {
+            user.getUser(email, function(user) {
                 if (user == null) {
                     callback(false);
                     return;
@@ -112,7 +112,7 @@ module.exports = function(redis) {
         },
         validateUser: function(email, passwordToValidate, callback) {
             callback = callback || emptyFunction;
-            User.getUser(email, function(user) {
+            user.getUser(email, function(user) {
                 if (user == null) {
                     callback(false);
                     return;
@@ -128,5 +128,5 @@ module.exports = function(redis) {
         }
     };
     
-    return User;
+    return user;
 };
