@@ -1,7 +1,7 @@
 {
-    "name": "redis-user-and-role",
+    "name": "redis-user",
     "description": "A simple user and role system for Node.js and Redis.",
-    "homepage": "https://github.com/CatChen/redis-user-and-role",
+    "homepage": "https://github.com/CatChen/redis-user",
     "version": "0.1.0",
     "author": {
         "name": "Cat Chen",
@@ -18,7 +18,7 @@
     "repositories": [
         {
             "type": "git",
-            "url": "git@github.com:CatChen/redis-user-and-role.git"
+            "url": "git@github.com:CatChen/redis-user.git"
         }
     ],
     "engines": { "node": ">= 0.4.7" }
