@@ -4,9 +4,9 @@ This is a simple membership component. It stores user and role data in Redis.
 
 # Roadmap
 
-    * 0.1.0 - User implementation
-    * 0.2.0 - Role implementation
-    * 0.3.0 - Custom property implementation
+* 0.1.0 - User implementation
+* 0.2.0 - Role implementation
+* 0.3.0 - Custom property implementation
 
 # API
 
