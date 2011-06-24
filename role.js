@@ -1,4 +1,4 @@
-module.exports = function(redisClient) {
+module.exports = function(redis) {
     var addUsersToRole = function(userEmails, roleName) {
         
     };
@@ -7,7 +7,7 @@ module.exports = function(redisClient) {
         
     };
     
-    return {
+    var Role = {
         createRole: function(name) {},
         getRole: function(name) {},
         getAllRoles: function() {},
@@ -17,4 +17,6 @@ module.exports = function(redisClient) {
         getRolesForUser: function(userEmail) {},
         isUserInRole: function(userEmail, roleName) {}
     };
+    
+    return Role
 };
