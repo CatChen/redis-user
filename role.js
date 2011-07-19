@@ -111,6 +111,47 @@ module.exports = function(redis, user) {
                 });
             });
         },
+        listRoles: function(callback) {
+            callback = callback || emptyFunction;
+            /* TODO: if 'global:nextRoleId' doesn't exist */
+            redis.get('global:nextRoleId', function(error, length) {
+                if (error) {
+                    callback(null);
+                    return;
+                }
+                var roles = [];
+                var callbackCount = 0;
+                for (var id = 0; id < length; id++) {
+                    (function(id) {
+                        redis.exists('role:' + id + ':name', function(error, exists) {
+                            if (exists == 1) {
+                                redis.get('role:' + id + ':name', function(error, name) {
+                                    if (error) {
+                                        /* prevent the callbackCount reaching the value of length */
+                                        callbackCount--;
+                                        callback(null);
+                                        return;
+                                    }
+                                    roles.push({
+                                        id: id,
+                                        name: name
+                                    });
+                                    callbackCount++;
+                                    if (callbackCount == length) {
+                                        callback(roles.sort(function (role1, role2) { return role1.id - role2.id; }));
+                                    }
+                                });
+                            } else {
+                                callbackCount++;
+                                if (callbackCount == length) {
+                                    callback(roles.sort(function (role1, role2) { return role1.id - role2.id; }));
+                                }
+                            }
+                        });
+                    })(id);
+                }
+            });
+        },
         getRole: function(name, callback) {
             callback = callback || emptyFunction;
             redis.get('role:' + name + ':id', function(error, id) {
