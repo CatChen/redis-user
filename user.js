@@ -1,3 +1,5 @@
+const Overload = require('jshelpers').Overload;
+
 const crypto = require('crypto');
 const emailRegExp = /[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
 const passwordHashAlgorithm = 'sha1';
@@ -19,7 +21,7 @@ module.exports = function(redis) {
                     return;
                 }
                 id--;
-                redis.setnx('user:' + email + ':id', id, function(error, set) {
+                redis.setnx('user:' + email.toLowerCase() + ':id', id, function(error, set) {
                     if (error) {
                         callback(false);
                         return;
@@ -83,17 +85,10 @@ module.exports = function(redis) {
                 }
             });
         },
-        getUser: function(email, callback) {
-            callback = callback || emptyFunction;
-            redis.get('user:' + email + ':id', function(error, id) {
-                if (error) {
-                    callback(null);
-                    return;
-                }
-                if (id == null) {
-                    callback(null);
-                    return;
-                }
+        getUser: Overload
+            .add([Number], function(id) { user.getUser(id, emptyFunction); })
+            .add([String], function(email) { user.getUser(email, emptyFunction); })
+            .add([Number, Function], function(id, callback) {
                 redis
                     .multi()
                     .get('user:' + id + ':email')
@@ -107,8 +102,20 @@ module.exports = function(redis) {
                             email: results[0]
                         });
                     });
-            });
-        },
+            })
+            .add([String, Function], function(email, callback) {
+                redis.get('user:' + email.toLowerCase() + ':id', function(error, id) {
+                    if (error) {
+                        callback(null);
+                        return;
+                    }
+                    if (id == null) {
+                        callback(null);
+                        return;
+                    }
+                    user.getUser(parseInt(id), callback);
+                });
+            }),
         updateUserPassword: function(email, oldPassword, newPassword, callback) {
             callback = callback || emptyFunction;
             user.validateUser(email, oldPassword, function(isValid) {

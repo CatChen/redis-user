@@ -1,3 +1,5 @@
+const Overload = require('jshelpers').Overload;
+
 const nameRegExp = /^[A-Za-z_$][A-Za-z0-9_$]*$/;
 
 module.exports = function(redis, user) {
@@ -90,7 +92,7 @@ module.exports = function(redis, user) {
                     return;
                 }
                 id--;
-                redis.setnx('role:' + name + ':id', id, function(error, set) {
+                redis.setnx('role:' + name.toLowerCase() + ':id', id, function(error, set) {
                     if (error) {
                         callback(false);
                         return;
@@ -153,20 +155,13 @@ module.exports = function(redis, user) {
                 }
             });
         },
-        getRole: function(name, callback) {
-            callback = callback || emptyFunction;
-            redis.get('role:' + name + ':id', function(error, id) {
-                if (error) {
-                    callback(null);
-                    return;
-                }
-                if (id == null) {
-                    callback(null);
-                    return;
-                }
+        getRole: Overload
+            .add([Number], function(id) { role.getRole(id, emptyFunction); })
+            .add([String], function(name) { role.getRole(name, emptyFunction); })
+            .add([Number, Function], function(id, callback) {
                 redis
                     .multi()
-                    .get('user:' + id + ':name')
+                    .get('role:' + id + ':name')
                     .exec(function(error, results) {
                         if (error) {
                             callback(null);
@@ -174,11 +169,23 @@ module.exports = function(redis, user) {
                         }
                         callback({
                             id: id,
-                            name: name
+                            name: results[0]
                         });
                     });
-            });
-        },
+            })
+            .add([String, Function], function(name, callback) {
+                redis.get('role:' + name.toLowerCase() + ':id', function(error, id) {
+                    if (error) {
+                        callback(null);
+                        return;
+                    }
+                    if (id == null) {
+                        callback(null);
+                        return;
+                    }
+                    role.getRole(parseInt(id), callback);
+                });
+            }),
         deleteRole: function(name, callback) {
             callback = callback || emptyFunction;
             role.getRole(name, function(role) {
@@ -189,7 +196,7 @@ module.exports = function(redis, user) {
                 redis
                     .multi()
                     .del('role:' + role.id + ':name')
-                    .del('role:' + role.name + ':id')
+                    .del('role:' + role.name.toLowerCase() + ':id')
                     .exec(function(error, results) {
                         if (error) {
                             callback(false);

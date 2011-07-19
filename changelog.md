@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.3
+
+Added reverse look up from id to email (in case of user) or name (in case of role) by using `getUser` or `getRole`.
+
 ## 0.2.2
 
 Added `Async` facade to all functions.
