@@ -41,6 +41,46 @@ module.exports = function(redis) {
                 });
             });
         },
+        listUsers: function(callback) {
+            callback = callback || emptyFunction;
+            redis.get('global:nextUserId', function(error, length) {
+                if (error) {
+                    callback(null);
+                    return;
+                }
+                var users = [];
+                var callbackCount = 0;
+                for (var id = 0; id < length; id++) {
+                    (function(id) {
+                        redis.exists('user:' + id + ':email', function(error, exists) {
+                            if (exists == 1) {
+                                redis.get('user:' + id + ':email', function(error, email) {
+                                    if (error) {
+                                        /* prevent the callbackCount reaching the value of length */
+                                        callbackCount--;
+                                        callback(null);
+                                        return;
+                                    }
+                                    users.push({
+                                        id: id,
+                                        email: email
+                                    });
+                                    callbackCount++;
+                                    if (callbackCount == length) {
+                                        callback(users.sort(function (user1, user2) { return user1.id - user2. id; }));
+                                    }
+                                });
+                            } else {
+                                callbackCount++;
+                                if (callbackCount == length) {
+                                    callback(users.sort(function (user1, user2) { return user1.id - user2. id; }));
+                                }
+                            }
+                        });
+                    })(id);
+                }
+            });
+        },
         getUser: function(email, callback) {
             callback = callback || emptyFunction;
             redis.get('user:' + email + ':id', function(error, id) {
