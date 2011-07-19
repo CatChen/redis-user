@@ -18,6 +18,7 @@ module.exports = function(redis) {
                     callback(false);
                     return;
                 }
+                id--;
                 redis.setnx('user:' + email + ':id', id, function(error, set) {
                     if (error) {
                         callback(false);
@@ -43,6 +44,7 @@ module.exports = function(redis) {
         },
         listUsers: function(callback) {
             callback = callback || emptyFunction;
+            /* TODO: if 'global:nextUserId' doesn't exist */
             redis.get('global:nextUserId', function(error, length) {
                 if (error) {
                     callback(null);
@@ -67,13 +69,13 @@ module.exports = function(redis) {
                                     });
                                     callbackCount++;
                                     if (callbackCount == length) {
-                                        callback(users.sort(function (user1, user2) { return user1.id - user2. id; }));
+                                        callback(users.sort(function (user1, user2) { return user1.id - user2.id; }));
                                     }
                                 });
                             } else {
                                 callbackCount++;
                                 if (callbackCount == length) {
-                                    callback(users.sort(function (user1, user2) { return user1.id - user2. id; }));
+                                    callback(users.sort(function (user1, user2) { return user1.id - user2.id; }));
                                 }
                             }
                         });

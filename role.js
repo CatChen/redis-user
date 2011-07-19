@@ -89,6 +89,7 @@ module.exports = function(redis, user) {
                     callback(false);
                     return;
                 }
+                id--;
                 redis.setnx('role:' + name + ':id', id, function(error, set) {
                     if (error) {
                         callback(false);
