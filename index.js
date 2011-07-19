@@ -10,8 +10,6 @@ var addAsyncFacade = function(obj) {
                     var argumentsArray = Array.prototype.slice.call(arguments, 0);
                     var callback = function(result) { operation.yield(result); };
                     argumentsArray.push(callback);
-                    console.log('calling ' + key);
-                    console.log('arguments: ' + argumentsArray);
                     obj[key].apply(obj, argumentsArray);
                     return operation;
                 };
