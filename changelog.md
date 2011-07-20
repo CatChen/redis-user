@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.4
+
+`user.updateUserPassword` doesn't require old password any more.
+
 ## 0.2.3
 
 Added reverse look up from id to email (in case of user) or name (in case of role) by using `getUser` or `getRole`.

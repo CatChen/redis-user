@@ -116,26 +116,20 @@ module.exports = function(redis) {
                     user.getUser(parseInt(id), callback);
                 });
             }),
-        updateUserPassword: function(email, oldPassword, newPassword, callback) {
+        updateUserPassword: function(email, password, callback) {
             callback = callback || emptyFunction;
-            user.validateUser(email, oldPassword, function(isValid) {
-                if (!isValid) {
+            user.getUser(email, function(user) {
+                if (user == null) {
                     callback(false);
                     return;
                 }
-                user.getUser(email, function(user) {
-                    if (user == null) {
+                redis.set('user:' + user.id + ':password', computeSHA1(newPassword), function(error, password) {
+                    if (error) {
                         callback(false);
-                        return;
+                        return
                     }
-                    redis.set('user:' + user.id + ':password', computeSHA1(newPassword), function(error, password) {
-                        if (error) {
-                            callback(false);
-                            return
-                        }
-                        callback(true);
-                    })
-                });
+                    callback(true);
+                })
             });
         },
         deleteUser: function(email, callback) {

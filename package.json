@@ -2,7 +2,7 @@
     "name": "redis-user",
     "description": "A simple user and role system for Node.js and Redis.",
     "homepage": "https://github.com/CatChen/redis-user",
-    "version": "0.2.3",
+    "version": "0.2.4",
     "author": {
         "name": "Cat Chen",
         "email": "catchen@catchen.me",
